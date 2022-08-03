@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
     let url = await Url.findOne({ longUrl });
 
     if (url) {
-      res.json(Url);
+      res.json(url);
     } else {
       const shortId = shortid.generate();
       url = new Url({
