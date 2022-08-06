@@ -1,13 +1,29 @@
 import React from "react";
-import "../styles/Shorten.css";
 import copy from "copy-to-clipboard";
 import { useState } from "react";
+import axios from "axios";
 
 const Shorten = () => {
-  const [srtUrl, setsrtUrl] = useState(null);
+  const [srtUrlData, setsrtUrlData] = useState(null);
+  const [longUrl, setlongUrl] = useState("");
+  const [copied, setcopied] = useState(false);
+
+  const shortenFunc = () => {
+    setcopied(false);
+    axios({
+      method: "post",
+      url: "http://localhost:5000/api/genShortUrl",
+      data: {
+        longUrl: longUrl,
+      },
+    }).then((res) => {
+      console.log(res);
+      setsrtUrlData(res.data);
+    });
+  };
 
   return (
-    <div className="py-10 my-4 max-w-[1280px] mx-auto">
+    <div className="py-12 my-6 max-w-[1280px] mx-auto" id="shortenUrl">
       <div className="container py-5">
         <div className="space-y-10">
           <div className="">
@@ -17,49 +33,70 @@ const Shorten = () => {
           </div>
           <div className="space-x-2 text-center mt-3 pt-5 flex w-[70%] inputBox mx-auto">
             <div className="flex w-full">
-              <input type="text" className="longInput w-full h-full px-3" />
+              <input
+                type="text"
+                className="longInput w-full h-full px-3"
+                value={longUrl}
+                onChange={(e) => {
+                  setlongUrl(e.target.value);
+                }}
+              />
             </div>
-            <button className=" bg-[#6163ff] p-3 px-5 font-semibold text-white">
+            <button
+              className="bg-[#6163ff] p-3 px-5 font-semibold text-white"
+              onClick={shortenFunc}
+            >
               Shorten
             </button>
           </div>
-          <div className="w-[70%] mx-auto border p-6 rounded-md">
-            <div></div>
-            <div className="space-y-4 text-[1.2rem]">
-              <p>
-                <span className="font-bold">Short URL : </span>
-                <a className="ml-2" href="">
-                  https://localhost:5000/hFih2Ksas
-                </a>
-                <button
-                  onClick={() => {
-                    copy("https://localhost:5000/hFih2Ksas");
-                  }}
-                  className="ml-4 border text-[1rem] p-1 px-2 bg-white text-black rounded"
-                >
-                  Copy
-                </button>
-              </p>
-              <p>
-                <span className="font-bold">Long URL : </span>
-                <a className="ml-3" href="">
-                  https://www.facebook.com
-                </a>
-              </p>
-              <p>
-                <span className="font-bold">Click Count : </span>
-                <a className="ml-2" href="">
-                  12
-                </a>
-              </p>
-              <p>
-                <span className="font-bold">Created On : </span>
-                <a className="ml-2" href="">
-                  Aug 03 2022
-                </a>
-              </p>
+          {srtUrlData && (
+            <div className="w-[70%] mx-auto border p-6 rounded-md">
+              <div></div>
+              <div className="space-y-4 text-[1.2rem]">
+                <p>
+                  <span className="font-bold">Short URL : </span>
+                  <a
+                    className="ml-2"
+                    target={"_blank"}
+                    href={srtUrlData.shortUrl}
+                  >
+                    {srtUrlData && srtUrlData.shortUrl}
+                  </a>
+                  <button
+                    onClick={() => {
+                      copy(srtUrlData.shortUrl);
+                      setcopied(true);
+                    }}
+                    className="ml-4 border text-[1rem] p-1 px-2 bg-white text-black rounded"
+                  >
+                    {copied === false ? "Copy" : "Copied!"}
+                  </button>
+                </p>
+                <p className="truncate">
+                  <span className="font-bold">Long URL : </span>
+                  <a
+                    className="ml-3"
+                    href={srtUrlData.longUrl}
+                    target={"_blank"}
+                  >
+                    {srtUrlData && srtUrlData.longUrl}
+                  </a>
+                </p>
+                <p>
+                  <span className="font-bold">Click Count : </span>
+                  <a className="ml-2" href="">
+                    {srtUrlData && srtUrlData.count}
+                  </a>
+                </p>
+                <p>
+                  <span className="font-bold">Created On : </span>
+                  <a className="ml-2" href="">
+                    {srtUrlData && srtUrlData.date.slice(4, 15)}
+                  </a>
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

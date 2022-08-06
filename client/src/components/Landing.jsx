@@ -2,7 +2,7 @@ import React from "react";
 
 const Landing = () => {
   return (
-    <div className="py-10 my-4 max-w-[1280px] mx-auto">
+    <div className="py-12 my-8 max-w-[1280px] mx-auto">
       <div className="container py-5">
         <div className="flex">
           <div className="w-1/2 space-y-8 flex flex-col justify-center">
