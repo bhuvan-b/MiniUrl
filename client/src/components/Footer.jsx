@@ -38,7 +38,7 @@ const Footer = () => {
         <a href="/" class="hover:underline">
           MiniUrl
         </a>
-        . Made with ❤️ by Bhuvan Bokka
+        . Made with ❤️ by Bhuvan
       </span>
     </footer>
   );
